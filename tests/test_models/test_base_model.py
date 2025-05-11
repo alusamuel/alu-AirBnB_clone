@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Unit tests for the BaseModel class"""
 
+from models.base_model import BaseModel
 import unittest
 from unittest import mock
 from datetime import datetime
@@ -9,8 +10,11 @@ import os
 import models
 
 # Ensure models directory is accessible
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
-from models.base_model import BaseModel
+sys.path.append(
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            "../../")))
 
 
 class TestBaseModel(unittest.TestCase):

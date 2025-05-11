@@ -16,7 +16,8 @@ class TestFileStorage(unittest.TestCase):
         self.storage = FileStorage()
 
     def test__file_path(self):
-        """Test if file_path is private and raises AttributeError when accessed"""
+        """Test if file_path is private and raises AttributeError
+        when accessed"""
         with self.assertRaises(AttributeError):
             _ = self.storage.__file_path
 
@@ -32,7 +33,8 @@ class TestFileStorage(unittest.TestCase):
         self.assertIs(new_dict, self.storage._FileStorage__objects)
 
     def test_new(self):
-        """Test that new() adds an object to the FileStorage.__objects attribute"""
+        """Test that new() adds an object to the FileStorage.
+        __objects attribute"""
         instance = BaseModel()
         self.storage.new(instance)
         self.assertIn(instance, self.storage._FileStorage__objects.values())

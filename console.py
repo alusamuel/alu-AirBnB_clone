@@ -84,7 +84,8 @@ class HBNBCommand(cmd.Cmd):
             instance.save()
             print(instance.id)
         else:
-            print("** class name missing **" if arg == "" else "** class doesn't exist **")
+            print("** class name missing **" if arg ==
+                  "" else "** class doesn't exist **")
 
     def do_show(self, arg):
         """Show object by class and ID"""
