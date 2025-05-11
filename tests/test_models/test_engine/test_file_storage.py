@@ -1,0 +1,68 @@
+import unittest
+from models.engine.file_storage import FileStorage
+from models.base_model import BaseModel
+import json
+
+
+class TestFileStorage(unittest.TestCase):
+    """Unit test class to thoroughly test the FileStorage class"""
+
+    def setUp(self):
+        """Set up an instance of storage and a model for testing"""
+        self.new_model = BaseModel()
+        self.new_model.name = "Sample_Model"
+        self.new_model.my_number = 23
+        self.new_model.save()
+        self.storage = FileStorage()
+
+    def test__file_path(self):
+        """Test if file_path is private and raises AttributeError when accessed"""
+        with self.assertRaises(AttributeError):
+            _ = self.storage.__file_path
+
+    def test__objects(self):
+        """Test if the all() method returns instances of BaseModel"""
+        for value in self.storage.all().values():
+            self.assertIsInstance(value, BaseModel)
+
+    def test_all(self):
+        """Test that all() returns the FileStorage.__objects attribute"""
+        new_dict = self.storage.all()
+        self.assertIsInstance(new_dict, dict)
+        self.assertIs(new_dict, self.storage._FileStorage__objects)
+
+    def test_new(self):
+        """Test that new() adds an object to the FileStorage.__objects attribute"""
+        instance = BaseModel()
+        self.storage.new(instance)
+        self.assertIn(instance, self.storage._FileStorage__objects.values())
+
+    def test_save(self):
+        """Test that save() properly saves objects to file.json"""
+        instance = BaseModel()
+        self.storage.new(instance)
+        self.storage.save()
+        with open("file.json", "r") as file:
+            objs = json.load(file)
+            self.assertIn(instance.to_dict(), objs.values())
+
+    def test_reload(self):
+        """Test successful reload of objects from file"""
+        # Add an object and save it
+        self.storage.new(self.new_model)
+        self.storage.save()
+
+        # Clear the __objects dictionary
+        self.storage._FileStorage__objects = {}
+
+        # Reload the objects from the file
+        self.storage.reload()
+
+        # Assert that the object is back in __objects
+        key = f"BaseModel.{self.new_model.id}"
+        self.assertIn(key, self.storage.all())
+        self.assertEqual(self.new_model.id, self.storage.all()[key].id)
+
+
+if __name__ == "__main__":
+    unittest.main()
